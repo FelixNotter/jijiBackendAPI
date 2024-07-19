@@ -32,4 +32,6 @@ class cart(models.Model):
     product_id = models.ForeignKey(product, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=True,blank=True)
 
+    class Meta:
+        db_table = 'cart'
     
