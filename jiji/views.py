@@ -50,27 +50,44 @@ def getProduct(request,_id):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
     
-@api_view(['GET'])
-def allCarts(request):
+@api_view(['GET','POST'])
+def carts(request):
     if request.method=='GET':
         carts = cart.objects.all()
         serializer = cartSerializer(carts,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
+    elif request.method=='POST':
+        serializer = cartSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+    
 
-@api_view(['DELETE'])
-def updateCart(request,_id):
-    cart = cart.objects.get(id=_id)
-    cart.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['PATCH'])
+@api_view(['DELETE','PATCH'])
 def updateCart(request,_id):
     cart = cart.objects.get(id=_id)
     serializer = cartSerializer(cart, data=request.data,partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_403_FORBIDDEN)
+    if request.method == 'DELETE':
+        cart.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    else:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+    
+
+
+# @api_view(['PATCH'])
+# def updateCart(request,_id):
+#     cart = cart.objects.get(id=_id)
+#     serializer = cartSerializer(cart, data=request.data,partial=True)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+#     return Response(status=status.HTTP_403_FORBIDDEN)
     
 @api_view(['GET'])
 def getStock(request,_id):

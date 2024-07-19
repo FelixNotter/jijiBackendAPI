@@ -17,7 +17,7 @@ class productSerializer(serializers.ModelSerializer):
     region_id = regionSerializer()
     class Meta:
         model = product
-        fields = ['id','name','description','price','stock_quantity','category_id','region_id']
+        fields = ['id','name','description','price','stock_quantity','category_id','region_id','product_url']
 
 
 class cartSerializer(serializers.ModelSerializer):
