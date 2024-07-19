@@ -1,0 +1,1 @@
+web: gunicorn jijiapp.wsgi --log-file -
